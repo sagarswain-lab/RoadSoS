@@ -1,0 +1,40 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Keep the example file
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.env/
+.pytest_cache/
+.vscode/
+backend/roadsos.db
+
+# Node.js
+node_modules/
+dist/
+build/
+.npm
+.eslintcache
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test recordings
+app_testing_demo.webp
+roadsos_final_demo.webp
+backend/test_osm.py
+backend/test_groq.py

@@ -1,0 +1,293 @@
+{
+  "IN": {
+    "country": "India",
+    "emergency_number": "112",
+    "traffic_authority": "Ministry of Road Transport & Highways",
+    "driving_side": "left",
+    "key_laws": [
+      "Motor Vehicles Act, 1988 (amended 2019)",
+      "Central Motor Vehicles Rules, 1989"
+    ],
+    "rights_after_accident": [
+      "You have the right to remain silent until you speak to a lawyer",
+      "You must provide your name, address, and vehicle registration to the other party",
+      "You are entitled to free emergency medical treatment at any government hospital",
+      "You can file an FIR at any police station, not just the one in the accident jurisdiction",
+      "Cashless treatment is available under Motor Accident Claims",
+      "You have the right to claim compensation under Section 164 MV Act"
+    ],
+    "what_to_tell_police": [
+      "Your full name and address",
+      "Vehicle registration number and insurance details",
+      "Date, time and location of accident",
+      "Sequence of events leading to accident",
+      "Names of witnesses if available",
+      "Do NOT admit fault or sign any statement under pressure"
+    ],
+    "common_fines": [
+      { "violation": "Drunk driving", "fine": "₹10,000 (first offence)", "section": "Section 185" },
+      { "violation": "Overspeeding", "fine": "₹1,000 - ₹2,000", "section": "Section 183" },
+      { "violation": "No helmet", "fine": "₹1,000 + 3 month licence suspension", "section": "Section 194D" },
+      { "violation": "No seatbelt", "fine": "₹1,000", "section": "Section 194B" },
+      { "violation": "Red light jumping", "fine": "₹1,000 - ₹5,000", "section": "Section 177" },
+      { "violation": "Using mobile while driving", "fine": "₹1,000 - ₹5,000", "section": "Section 184" },
+      { "violation": "No valid licence", "fine": "₹5,000", "section": "Section 181" },
+      { "violation": "No insurance", "fine": "₹2,000 + imprisonment", "section": "Section 196" }
+    ],
+    "insurance_steps": [
+      "Inform your insurance company within 24-48 hours of the accident",
+      "File a police FIR immediately",
+      "Take photos of both vehicles and the accident scene",
+      "Get contact details of witnesses",
+      "Do not repair the vehicle before insurance survey",
+      "Collect all medical bills and receipts for reimbursement"
+    ],
+    "helplines": {
+      "police": "100",
+      "ambulance": "108",
+      "fire": "101",
+      "national_emergency": "112",
+      "road_accident": "1073",
+      "women_helpline": "1091"
+    }
+  },
+  "BD": {
+    "country": "Bangladesh",
+    "emergency_number": "999",
+    "traffic_authority": "Bangladesh Road Transport Authority (BRTA)",
+    "driving_side": "left",
+    "key_laws": [
+      "Road Transport Act, 2018",
+      "Motor Vehicles Ordinance, 1983"
+    ],
+    "rights_after_accident": [
+      "You have the right to emergency medical treatment",
+      "You must report accident to nearest police station",
+      "You are entitled to compensation under Motor Accidents Act",
+      "You can file General Diary (GD) at any police station"
+    ],
+    "what_to_tell_police": [
+      "Your name, address and National ID number",
+      "Vehicle registration and driving licence number",
+      "Insurance policy details",
+      "Exact location and time of accident",
+      "Do NOT admit guilt without legal advice"
+    ],
+    "common_fines": [
+      { "violation": "Drunk driving", "fine": "৳50,000 or imprisonment up to 3 years" },
+      { "violation": "Overspeeding", "fine": "৳10,000 - ৳25,000" },
+      { "violation": "No helmet", "fine": "৳500 - ৳5,000" },
+      { "violation": "No valid licence", "fine": "৳25,000 - ৳50,000" },
+      { "violation": "Reckless driving", "fine": "৳25,000 + imprisonment" }
+    ],
+    "insurance_steps": [
+      "Inform insurance company within 48 hours",
+      "File police General Diary (GD)",
+      "Photograph accident scene and vehicle damage",
+      "Collect witness information",
+      "Submit claim with all documents"
+    ],
+    "helplines": {
+      "police": "999",
+      "ambulance": "999",
+      "fire": "9555555",
+      "national_emergency": "999"
+    }
+  },
+  "LK": {
+    "country": "Sri Lanka",
+    "emergency_number": "119",
+    "traffic_authority": "Department of Motor Traffic",
+    "driving_side": "left",
+    "key_laws": [
+      "Motor Traffic Act No 14 of 1951",
+      "Motor Traffic (Amendment) Act No 8 of 2009"
+    ],
+    "rights_after_accident": [
+      "You must stop your vehicle at the scene",
+      "You are entitled to free emergency treatment at government hospitals",
+      "You must inform nearest police station within 24 hours",
+      "You have right to claim compensation through courts"
+    ],
+    "what_to_tell_police": [
+      "Your name, address and NIC number",
+      "Vehicle registration and insurance details",
+      "Licence number and class",
+      "Accident location, date and time",
+      "Do NOT make any admission of guilt"
+    ],
+    "common_fines": [
+      { "violation": "Drunk driving", "fine": "LKR 25,000 or 2 years imprisonment" },
+      { "violation": "Overspeeding", "fine": "LKR 3,000 - LKR 10,000" },
+      { "violation": "No helmet", "fine": "LKR 1,000" },
+      { "violation": "No seatbelt", "fine": "LKR 1,000" },
+      { "violation": "No valid licence", "fine": "LKR 5,000" }
+    ],
+    "insurance_steps": [
+      "Report to insurance within 24 hours",
+      "Get police report (B report)",
+      "Do not repair vehicle before inspection",
+      "Submit Motor Accident Report Form"
+    ],
+    "helplines": {
+      "police": "119",
+      "ambulance": "110",
+      "fire": "111",
+      "national_emergency": "119"
+    }
+  },
+  "TH": {
+    "country": "Thailand",
+    "emergency_number": "191",
+    "traffic_authority": "Department of Land Transport (DLT)",
+    "driving_side": "left",
+    "key_laws": [
+      "Land Traffic Act B.E. 2522 (1979)",
+      "Motor Vehicle Act B.E. 2522"
+    ],
+    "rights_after_accident": [
+      "You have right to medical treatment",
+      "You must stay at accident scene and help injured parties",
+      "You have right to file police report",
+      "Insurance must cover medical costs up to 30,000 THB per person"
+    ],
+    "what_to_tell_police": [
+      "Your name and Thai ID or passport number",
+      "Vehicle registration details",
+      "Insurance company and policy number",
+      "Accident circumstances",
+      "Avoid admitting fault"
+    ],
+    "common_fines": [
+      { "violation": "Drunk driving (BAC > 0.05)", "fine": "THB 10,000 - THB 20,000 + 1 year jail" },
+      { "violation": "Overspeeding", "fine": "THB 500 - THB 2,000" },
+      { "violation": "No helmet", "fine": "THB 500" },
+      { "violation": "No seatbelt", "fine": "THB 500" },
+      { "violation": "Red light violation", "fine": "THB 1,000" }
+    ],
+    "insurance_steps": [
+      "Call insurance hotline immediately",
+      "File police report (Por Ror Bor 5 form)",
+      "Take photos of damage",
+      "Submit claim within 7 days"
+    ],
+    "helplines": {
+      "police": "191",
+      "ambulance": "1669",
+      "tourist_police": "1155",
+      "national_emergency": "191"
+    }
+  },
+  "NP": {
+    "country": "Nepal",
+    "emergency_number": "100",
+    "traffic_authority": "Department of Transport Management (DoTM)",
+    "driving_side": "left",
+    "key_laws": [
+      "Motor Vehicle and Transport Management Act, 2049 (1993)"
+    ],
+    "rights_after_accident": [
+      "Right to emergency medical treatment at government hospitals",
+      "Right to file complaint at nearest police station",
+      "Right to compensation under Motor Vehicle Act",
+      "Right to legal representation"
+    ],
+    "what_to_tell_police": [
+      "Your name, address and citizenship number",
+      "Vehicle registration and insurance details",
+      "Licence number",
+      "Accident details — time, place, circumstances"
+    ],
+    "common_fines": [
+      { "violation": "Drunk driving", "fine": "NPR 10,000 - NPR 50,000 + licence cancellation" },
+      { "violation": "Overspeeding", "fine": "NPR 500 - NPR 5,000" },
+      { "violation": "No helmet", "fine": "NPR 500 - NPR 1,000" },
+      { "violation": "No licence", "fine": "NPR 2,000 - NPR 10,000" }
+    ],
+    "insurance_steps": [
+      "Inform insurance within 72 hours",
+      "File police report",
+      "Photograph accident scene",
+      "Submit claim with all medical bills"
+    ],
+    "helplines": {
+      "police": "100",
+      "ambulance": "102",
+      "fire": "101",
+      "national_emergency": "100"
+    }
+  },
+  "MM": {
+    "country": "Myanmar",
+    "emergency_number": "199",
+    "traffic_authority": "Road Transport Administration Department (RTAD)",
+    "driving_side": "right",
+    "key_laws": [
+      "Motor Vehicle Law (2011)",
+      "Road Traffic Rules (2015)"
+    ],
+    "rights_after_accident": [
+      "Right to emergency medical treatment",
+      "Must report to township police immediately",
+      "Right to claim insurance compensation"
+    ],
+    "what_to_tell_police": [
+      "Full name and NRC number",
+      "Vehicle registration number",
+      "Insurance policy details",
+      "Accident time and location"
+    ],
+    "common_fines": [
+      { "violation": "Drunk driving", "fine": "MMK 100,000 - MMK 500,000" },
+      { "violation": "Overspeeding", "fine": "MMK 30,000 - MMK 100,000" },
+      { "violation": "No helmet", "fine": "MMK 10,000 - MMK 30,000" }
+    ],
+    "insurance_steps": [
+      "Report to insurance company within 24 hours",
+      "File police report at township police station",
+      "Submit claim documents within 30 days"
+    ],
+    "helplines": {
+      "police": "199",
+      "ambulance": "192",
+      "fire": "191",
+      "national_emergency": "199"
+    }
+  },
+  "BT": {
+    "country": "Bhutan",
+    "emergency_number": "113",
+    "traffic_authority": "Road Safety and Transport Authority (RSTA)",
+    "driving_side": "left",
+    "key_laws": [
+      "Road Safety and Transport Act of Bhutan 1999",
+      "RSTA Regulations"
+    ],
+    "rights_after_accident": [
+      "Right to free emergency medical treatment",
+      "Right to report to nearest police station",
+      "Right to compensation from at-fault party"
+    ],
+    "what_to_tell_police": [
+      "Your name and CID card number",
+      "Vehicle registration and insurance",
+      "Accident location and time"
+    ],
+    "common_fines": [
+      { "violation": "Drunk driving", "fine": "Nu 5,000 - Nu 20,000 + licence cancellation" },
+      { "violation": "Overspeeding", "fine": "Nu 500 - Nu 2,000" },
+      { "violation": "No seatbelt", "fine": "Nu 500" }
+    ],
+    "insurance_steps": [
+      "Report to Royal Insurance Corporation of Bhutan",
+      "File police report",
+      "Submit claim within 14 days"
+    ],
+    "helplines": {
+      "police": "113",
+      "ambulance": "112",
+      "fire": "110",
+      "national_emergency": "113"
+    }
+  }
+}
