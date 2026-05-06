@@ -31,27 +31,21 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# Define allowed origins (including IPv6 for some browsers)
-ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "http://[::1]:5173",
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://[::1]:3000",
-]
-
-# Add FRONTEND_URL from environment if it exists
-frontend_url = os.getenv("FRONTEND_URL")
-if frontend_url:
-    if "," in frontend_url:
-        ALLOWED_ORIGINS.extend([url.strip() for url in frontend_url.split(",")])
-    else:
-        ALLOWED_ORIGINS.append(frontend_url.strip())
+def get_allowed_origins():
+    origins = [
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:5173",
+    ]
+    frontend_url = os.getenv("FRONTEND_URL", "")
+    if frontend_url:
+        origins.append(frontend_url)
+    return origins
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS,
+    allow_origins=get_allowed_origins(),
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -59,9 +53,8 @@ app.add_middleware(
 
 @app.middleware("http")
 async def log_requests(request, call_next):
-    print(f"DEBUG: Receiving {request.method} request to {request.url.path}")
+    # Production-ready logging can be more structured, but keeping it simple for hackathon
     response = await call_next(request)
-    print(f"DEBUG: Responding with status {response.status_code}")
     return response
 
 app.include_router(emergency_router)
@@ -86,3 +79,8 @@ async def root():
 @app.get("/health")
 async def health():
     return {"status": "healthy"}
+
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    from fastapi.responses import Response
+    return Response(status_code=204)

@@ -73,6 +73,22 @@ def detect_intent(message: str) -> str:
         return "report"
     return "general"
 
+_llm_instance = None
+
+def get_llm():
+    global _llm_instance
+    if _llm_instance is None:
+        groq_api_key = os.getenv("GROQ_API_KEY", "")
+        if not groq_api_key:
+            return None
+        _llm_instance = ChatGroq(
+            api_key=groq_api_key,
+            model_name="llama-3.1-8b-instant",
+            temperature=0.3,
+            max_tokens=800
+        )
+    return _llm_instance
+
 async def get_chatbot_response(
     message: str,
     history: List[dict],
@@ -81,16 +97,9 @@ async def get_chatbot_response(
     language: str = "en"
 ) -> Tuple[str, Optional[List[EmergencyService]]]:
 
-    groq_api_key = os.getenv("GROQ_API_KEY", "")
-    if not groq_api_key:
+    llm = get_llm()
+    if not llm:
         return "⚠️ Groq API key not configured. Add GROQ_API_KEY to your .env file.", None
-
-    llm = ChatGroq(
-        api_key=groq_api_key,
-        model_name="llama-3.1-8b-instant",
-        temperature=0.3,
-        max_tokens=800
-    )
 
     intent = detect_intent(message)
     services = None

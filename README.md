@@ -38,11 +38,11 @@ Built for **Road Safety Hackathon 2026** — IIT Madras / CoERS
 ```bash
 cd backend
 python -m venv venv
-source venv/bin/activate
+venv\Scripts\activate
 pip install -r requirements.txt
-cp .env.example .env
+copy .env.example .env # select no if .env file already exit 
 # Edit .env → add GROQ_API_KEY
-uvicorn app.main:app --reload --port 8000
+set PYTHONIOENCODING=utf8 && uvicorn app.main:app --reload --port 8000
 ```
 
 ### 2. Frontend

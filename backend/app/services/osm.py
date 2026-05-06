@@ -45,9 +45,18 @@ def get_reason(service: dict, distance_km: float, service_type: str) -> str:
         reasons.append("very close")
     return " · ".join(reasons)
 
+_client = None
+
+def get_client():
+    global _client
+    if _client is None:
+        headers = {"User-Agent": "RoadSoS-SafetyCompanion/1.0 (contact: road-sos@example.com)"}
+        _client = httpx.AsyncClient(timeout=30, headers=headers)
+    return _client
+
 async def fetch_nearby_services(lat: float, lng: float, radius: int = 5000) -> List[EmergencyService]:
     results = []
-    headers = {"User-Agent": "RoadSoS-SafetyCompanion/1.0 (contact: road-sos@example.com)"}
+    client = get_client()
     
     # Combined query for better performance
     combined_filter = '["amenity"~"hospital|clinic|doctors|police|fire_station|pharmacy"]'
@@ -61,50 +70,49 @@ async def fetch_nearby_services(lat: float, lng: float, radius: int = 5000) -> L
     );
     out center tags;
     """
-    
-    async with httpx.AsyncClient(timeout=30, headers=headers) as client:
-        try:
-            resp = await client.post(OVERPASS_URL, data={"data": query})
-            if resp.status_code != 200:
-                return []
+
+    try:
+        resp = await client.post(OVERPASS_URL, data={"data": query})
+        if resp.status_code != 200:
+            return []
+        
+        elements = resp.json().get("elements", [])
+        for el in elements:
+            tags = el.get("tags", {})
             
-            elements = resp.json().get("elements", [])
-            for el in elements:
-                tags = el.get("tags", {})
-                
-                # Determine service type from tags
-                service_type = "other"
-                amenity = tags.get("amenity")
-                if amenity in ["hospital", "clinic", "doctors"]: service_type = "hospital"
-                elif amenity == "police": service_type = "police"
-                elif amenity == "fire_station": service_type = "fire"
-                elif amenity == "pharmacy": service_type = "pharmacy"
-                elif tags.get("emergency") in ["ambulance_station", "medical_service"]: service_type = "ambulance"
-                elif tags.get("shop") in ["car_repair", "tyres"]: service_type = "towing"
+            # Determine service type from tags
+            service_type = "other"
+            amenity = tags.get("amenity")
+            if amenity in ["hospital", "clinic", "doctors"]: service_type = "hospital"
+            elif amenity == "police": service_type = "police"
+            elif amenity == "fire_station": service_type = "fire"
+            elif amenity == "pharmacy": service_type = "pharmacy"
+            elif tags.get("emergency") in ["ambulance_station", "medical_service"]: service_type = "ambulance"
+            elif tags.get("shop") in ["car_repair", "tyres"]: service_type = "towing"
 
-                elat = el.get("lat") or el.get("center", {}).get("lat")
-                elng = el.get("lon") or el.get("center", {}).get("lon")
-                if not elat or not elng: continue
+            elat = el.get("lat") or el.get("center", {}).get("lat")
+            elng = el.get("lon") or el.get("center", {}).get("lon")
+            if not elat or not elng: continue
 
-                distance = haversine(lat, lng, elat, elng)
-                phone = tags.get("phone") or tags.get("contact:phone") or tags.get("contact:mobile")
-                name = tags.get("name") or tags.get("name:en") or service_type.replace("_", " ").title()
+            distance = haversine(lat, lng, elat, elng)
+            phone = tags.get("phone") or tags.get("contact:phone") or tags.get("contact:mobile")
+            name = tags.get("name") or tags.get("name:en") or service_type.replace("_", " ").title()
 
-                service = EmergencyService(
-                    id=str(el.get("id", "")),
-                    name=name,
-                    type=service_type,
-                    lat=elat,
-                    lng=elng,
-                    distance_km=round(distance, 2),
-                    address=tags.get("addr:full") or tags.get("addr:street"),
-                    phone=phone,
-                    score=round(score_service(el, distance, service_type), 1),
-                    reason=get_reason(el, distance, service_type)
-                )
-                results.append(service)
-        except Exception as e:
-            print(f"Overpass combined error: {e}")
+            service = EmergencyService(
+                id=str(el.get("id", "")),
+                name=name,
+                type=service_type,
+                lat=elat,
+                lng=elng,
+                distance_km=round(distance, 2),
+                address=tags.get("addr:full") or tags.get("addr:street"),
+                phone=phone,
+                score=round(score_service(el, distance, service_type), 1),
+                reason=get_reason(el, distance, service_type)
+            )
+            results.append(service)
+    except Exception as e:
+        print(f"Overpass combined error: {e}")
             
     results.sort(key=lambda x: x.score or 0, reverse=True)
     return results

@@ -44,6 +44,22 @@ Format your response as:
 
 📞 Helplines: [relevant numbers]"""
 
+_llm_instance = None
+
+def get_llm():
+    global _llm_instance
+    if _llm_instance is None:
+        groq_key = os.getenv("GROQ_API_KEY", "")
+        if not groq_key:
+            return None
+        _llm_instance = ChatGroq(
+            api_key=groq_key,
+            model_name="llama-3.1-8b-instant",
+            temperature=0.2,
+            max_tokens=500
+        )
+    return _llm_instance
+
 @router.post("", response_model=LegalResponse)
 async def get_legal_advice(req: LegalRequest, db: aiosqlite.Connection = Depends(get_db)):
     country_code = req.country.upper() if req.country else "IN"
@@ -71,15 +87,13 @@ Insurance Steps:
 {json.dumps(country_data.get('insurance_steps', []), indent=2)}
 """
 
-    groq_key = os.getenv("GROQ_API_KEY", "")
-    if not groq_key:
+    llm = get_llm()
+    if not llm:
         return LegalResponse(
             answer="⚠️ AI service not configured. Please add GROQ_API_KEY to your .env file.",
             country=country_data.get("country", "India"),
             relevant_laws=country_data.get("key_laws", [])
         )
-
-    llm = ChatGroq(api_key=groq_key, model_name="llama-3.1-8b-instant", temperature=0.2, max_tokens=500)
 
     lang_hint = f"\nUser's preferred language: {req.language}. Respond in this language." if req.language else ""
     messages = [
