@@ -70,6 +70,7 @@ async def fetch_nearby_services(lat: float, lng: float, radius: int = 5000) -> L
     (
       node{combined_filter}(around:{radius},{lat},{lng});
       way{combined_filter}(around:{radius},{lat},{lng});
+      relation{combined_filter}(around:{radius},{lat},{lng});
       node["emergency"~"ambulance_station|medical_service"](around:{radius},{lat},{lng});
       node["shop"~"car_repair|tyres"]["service"~"towing|recovery"](around:{radius},{lat},{lng});
     );
@@ -78,7 +79,8 @@ async def fetch_nearby_services(lat: float, lng: float, radius: int = 5000) -> L
 
     for url in OVERPASS_SERVERS:
         try:
-            resp = await client.post(url, data={"data": query})
+            # Using content=query instead of data={'data': query} is often more reliable
+            resp = await client.post(url, content=query)
             
             if resp.status_code == 429:
                 print(f"Overpass rate limit hit on {url}, trying next server...")
@@ -124,9 +126,11 @@ async def fetch_nearby_services(lat: float, lng: float, radius: int = 5000) -> L
                 )
                 results.append(service)
             
-            # If we reached here and got results, we are done
             if results:
+                print(f"[SUCCESS] Found {len(results)} services using {url}")
                 break
+            else:
+                print(f"[INFO] No results found on {url}, trying fallback...")
                 
         except Exception as e:
             print(f"Overpass error on {url}: {e}")
