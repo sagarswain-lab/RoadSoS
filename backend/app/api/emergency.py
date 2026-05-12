@@ -25,12 +25,13 @@ async def get_nearby_services(req: LocationRequest, db: aiosqlite.Connection = D
         services = [EmergencyService(**s) for s in services_data]
     else:
         services = await fetch_nearby_services(req.lat, req.lng, req.radius)
-        # Cache results
-        await db.execute(
-            "INSERT INTO emergency_cache (lat, lng, radius, data) VALUES (?, ?, ?, ?)",
-            (req.lat, req.lng, req.radius, json.dumps([s.dict() for s in services]))
-        )
-        await db.commit()
+        # Cache results only if we found something
+        if services:
+            await db.execute(
+                "INSERT INTO emergency_cache (lat, lng, radius, data) VALUES (?, ?, ?, ?)",
+                (req.lat, req.lng, req.radius, json.dumps([s.dict() for s in services]))
+            )
+            await db.commit()
 
     return EmergencyResponse(
         services=services,
