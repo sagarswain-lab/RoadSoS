@@ -3,11 +3,13 @@ import math
 from typing import List, Dict, Any
 from app.models.schemas import EmergencyService
 
-# Primary and fallback Overpass API servers
+# Primary and fallback Overpass API servers (Reordered for reliability)
 OVERPASS_SERVERS = [
     "https://overpass.kumi.systems/api/interpreter",
+    "https://overpass.osm.ch/api/interpreter",
     "https://overpass-api.de/api/interpreter",
-    "https://overpass.nchc.org.tw/api/interpreter"
+    "https://overpass.nchc.org.tw/api/interpreter",
+    "https://z.overpass-api.de/api/interpreter"
 ]
 
 SERVICE_QUERIES = {
@@ -137,7 +139,7 @@ async def fetch_nearby_services(lat: float, lng: float, radius: int = 5000) -> L
                 print(f"[INFO] No results found on {url}, trying fallback...")
                 
         except Exception as e:
-            print(f"Overpass error on {url}: {e}")
+            print(f"Overpass connection error on {url}: {repr(e)}")
             continue
             
     results.sort(key=lambda x: x.score or 0, reverse=True)
