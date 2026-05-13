@@ -22,13 +22,28 @@ async def chat(req: ChatRequest, db: aiosqlite.Connection = Depends(get_db)):
 
     history = [{"role": row["role"], "content": row["content"]} for row in rows]
 
-    # Get AI response
+    # Check if we already have cached emergency services (from Emergency tab)
+    cached_services = None
+    if req.lat and req.lng:
+        async with db.execute("""
+            SELECT data FROM emergency_cache
+            WHERE ABS(lat - ?) < 0.01 AND ABS(lng - ?) < 0.01
+            AND created_at > datetime('now', '-30 minutes')
+            ORDER BY created_at DESC LIMIT 1
+        """, (req.lat, req.lng)) as cursor:
+            cached = await cursor.fetchone()
+        if cached:
+            from app.models.schemas import EmergencyService
+            cached_services = [EmergencyService(**s) for s in json.loads(cached["data"])]
+
+    # Get AI response (pass cached services to avoid slow Overpass search)
     reply, services = await get_chatbot_response(
         message=req.message,
         history=history,
         lat=req.lat,
         lng=req.lng,
-        language=req.language or "en"
+        language=req.language or "en",
+        cached_services=cached_services
     )
 
     # Save user message + AI reply to history
@@ -44,7 +59,7 @@ async def chat(req: ChatRequest, db: aiosqlite.Connection = Depends(get_db)):
 
     return ChatResponse(
         reply=reply,
-        services=services[:3] if services else None,
+        services=services[:5] if services else None,
         session_id=req.session_id
     )
 

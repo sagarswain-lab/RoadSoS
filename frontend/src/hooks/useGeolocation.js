@@ -22,17 +22,21 @@ export function useGeolocation() {
     }
 
     const onError = (err) => {
-      // Fallback to Bhubaneswar (IIT Madras is Chennai, but dev location)
+      // Fallback to Bhubaneswar
       console.warn('GPS error, using fallback:', err.message)
       setLocation({ lat: 20.2961, lng: 85.8245, accuracy: 1000 })
       setLoading(false)
     }
 
-    navigator.geolocation.getCurrentPosition(onSuccess, onError, {
+    // Use watchPosition for LIVE tracking (updates as user moves)
+    const watchId = navigator.geolocation.watchPosition(onSuccess, onError, {
       enableHighAccuracy: true,
       timeout: 10000,
-      maximumAge: 30000,
+      maximumAge: 15000,
     })
+
+    // Cleanup: stop watching when component unmounts
+    return () => navigator.geolocation.clearWatch(watchId)
   }, [])
 
   return { location, error, loading }

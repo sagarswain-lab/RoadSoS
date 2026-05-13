@@ -19,6 +19,7 @@ class EmergencyService(BaseModel):
     open_now: Optional[bool] = None
     score: Optional[float] = None
     reason: Optional[str] = None
+    map_url: Optional[str] = None
 
 class EmergencyResponse(BaseModel):
     services: List[EmergencyService]

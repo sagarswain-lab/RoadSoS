@@ -27,7 +27,19 @@ async def reverse_geocode(lat: float, lng: float) -> Dict:
             "country_code": address.get("country_code", "IN").upper(),
             "state": address.get("state", ""),
             "city": address.get("city") or address.get("town") or address.get("village", ""),
-            "road": address.get("road", "")
+            "suburb": address.get("suburb") or address.get("neighbourhood") or address.get("quarter", ""),
+            "road": address.get("road", ""),
+            # 'area' = most specific location name for display
+            "area": (
+                address.get("suburb")
+                or address.get("neighbourhood")
+                or address.get("quarter")
+                or address.get("village")
+                or address.get("town")
+                or address.get("city")
+                or address.get("state")
+                or ""
+            ),
         }
     except Exception as e:
         print(f"Geocoding error: {e}")

@@ -60,17 +60,32 @@ export default function ServiceCard({ service, onClick, highlighted }) {
         </div>
       </div>
 
-      {service.phone && (
-        <a href={`tel:${service.phone}`} onClick={e => e.stopPropagation()}
-          style={{
-            display:'flex', alignItems:'center', gap:'6px', marginTop:'8px',
-            background: meta.color, color:'white', borderRadius:'8px',
-            padding:'6px 12px', fontSize:'12px', fontWeight:600, width:'fit-content',
-            fontFamily:'var(--font-head)', letterSpacing:'0.04em', textDecoration:'none'
-          }}>
-          <Phone size={11}/> CALL NOW
-        </a>
-      )}
+      <div style={{ display:'flex', gap:'8px', marginTop:'10px' }}>
+        {service.phone && (
+          <a href={`tel:${service.phone}`} onClick={e => e.stopPropagation()}
+            style={{
+              display:'flex', alignItems:'center', gap:'6px',
+              background: meta.color, color:'white', borderRadius:'8px',
+              padding:'6px 12px', fontSize:'11px', fontWeight:700,
+              fontFamily:'var(--font-head)', letterSpacing:'0.04em', textDecoration:'none',
+              boxShadow:`0 4px 12px ${meta.color}40`
+            }}>
+            <Phone size={11}/> CALL
+          </a>
+        )}
+        {service.map_url && (
+          <a href={service.map_url} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}
+            style={{
+              display:'flex', alignItems:'center', gap:'6px',
+              background: 'var(--bg-elevated)', color: 'var(--text-primary)', borderRadius:'8px',
+              border: '1px solid var(--border)',
+              padding:'6px 12px', fontSize:'11px', fontWeight:700,
+              fontFamily:'var(--font-head)', letterSpacing:'0.04em', textDecoration:'none'
+            }}>
+            📍 DIRECTIONS
+          </a>
+        )}
+      </div>
     </div>
   )
 }

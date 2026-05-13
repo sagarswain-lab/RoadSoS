@@ -89,8 +89,8 @@ export default function App() {
         {locationInfo && (
           <div className="sidebar-label px-5 py-3 border-b" style={{borderColor:'var(--border)'}}>
             <div style={{fontSize:'10px',color:'var(--text-muted)',letterSpacing:'0.1em',marginBottom:'2px'}}>CURRENT LOCATION</div>
-            <div style={{fontSize:'13px',color:'var(--text-secondary)',fontWeight:500}}>{locationInfo.city || locationInfo.state || '—'}</div>
-            <div style={{fontSize:'11px',color:'var(--text-muted)'}}>{locationInfo.country} {locationInfo.country_code && `· ${locationInfo.country_code}`}</div>
+            <div style={{fontSize:'13px',color:'var(--text-secondary)',fontWeight:500}}>{locationInfo.area || locationInfo.suburb || locationInfo.city || locationInfo.state || '—'}</div>
+            <div style={{fontSize:'11px',color:'var(--text-muted)'}}>{[locationInfo.city, locationInfo.state].filter(Boolean).join(', ')} {locationInfo.country_code && `· ${locationInfo.country_code}`}</div>
           </div>
         )}
 
@@ -215,9 +215,16 @@ export default function App() {
             </div>
           )}
 
-          {activeTab === 'chat'   && <ChatPage   location={location} />}
-          {activeTab === 'legal'  && <LegalPage  />}
-          {activeTab === 'report' && <ReportPage location={location} />}
+          {/* Keep Chat, Legal, Report always mounted — preserves state across tab switches */}
+          <div style={{display: activeTab === 'chat' ? 'flex' : 'none', flex:1, flexDirection:'column', overflow:'hidden'}}>
+            <ChatPage location={location} />
+          </div>
+          <div style={{display: activeTab === 'legal' ? 'flex' : 'none', flex:1, flexDirection:'column', overflow:'hidden'}}>
+            <LegalPage />
+          </div>
+          <div style={{display: activeTab === 'report' ? 'flex' : 'none', flex:1, flexDirection:'column', overflow:'hidden'}}>
+            <ReportPage location={location} />
+          </div>
         </div>
 
         {/* Bottom nav - mobile only */}

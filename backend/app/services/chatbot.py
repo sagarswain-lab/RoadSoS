@@ -27,8 +27,13 @@ CRITICAL RULES:
 - Keep responses concise — injured people can't read long paragraphs
 - If location is provided, give location-specific advice
 
-Supported languages: English, Hindi (हिंदी), Odia (ଓଡ଼ିଆ), Bengali (বাংলা), Tamil (தமிழ்), 
-Sinhala (සිංහල), Thai (ภาษาไทย), Burmese (မြန်မာဘာသာ), Nepali (नेपाली)
+ABSOLUTE RULE — NEVER FABRICATE DATA:
+- ONLY mention hospital/police/pharmacy names that are explicitly listed in the NEARBY SERVICES section below.
+- If no NEARBY SERVICES section is present, say "Please check the Emergency tab for real-time nearby services" or "call 112".
+- NEVER guess, invent, or recall hospital names from your training data. This is a safety-critical app.
+- NEVER say things like "some nearby hospitals include..." unless those names come from the provided real-time data.
+
+Supported languages: English, Hindi, Odia, Bengali, Tamil, Sinhala, Thai, Burmese, Nepali
 
 When you detect emergency keywords like "accident", "crash", "injured", "blood", 
 "unconscious" — respond with URGENT tone and immediate action steps.
@@ -38,10 +43,7 @@ When asked about first aid, use this format:
 Keep it scannable for someone in panic.
 
 For legal questions, cite the relevant country's Motor Vehicles Act or equivalent.
-For road reports, confirm you'll help them file the report.
-
-You have access to real-time nearby emergency services data which will be provided 
-in the context when available."""
+For road reports, confirm you'll help them file the report."""
 
 EMERGENCY_KEYWORDS = [
     "accident", "crash", "injured", "blood", "unconscious", "help", "emergency",
@@ -94,32 +96,60 @@ async def get_chatbot_response(
     history: List[dict],
     lat: Optional[float] = None,
     lng: Optional[float] = None,
-    language: str = "en"
+    language: str = "en",
+    cached_services: Optional[List[EmergencyService]] = None
 ) -> Tuple[str, Optional[List[EmergencyService]]]:
 
     llm = get_llm()
     if not llm:
-        return "⚠️ Groq API key not configured. Add GROQ_API_KEY to your .env file.", None
+        return "Groq API key not configured. Add GROQ_API_KEY to your .env file.", None
 
     intent = detect_intent(message)
-    services = None
+    services = cached_services  # Use cached data from Emergency tab if available
     context_msg = ""
 
-    # If emergency intent and location available, fetch services
-    if intent in ("emergency", "general") and lat and lng:
+    # Reverse-geocode to get human-readable location name
+    if lat and lng:
         try:
-            services = await fetch_nearby_services(lat, lng, radius=5000)
-            if services:
-                top3 = services[:3]
-                services_text = "\n".join([
-                    f"- {s.name} ({s.type}): {s.distance_km}km away"
-                    + (f", Phone: {s.phone}" if s.phone else "")
-                    + f" — {s.reason}"
-                    for s in top3
-                ])
-                context_msg = f"\n\nNEARBY EMERGENCY SERVICES (real-time):\n{services_text}\nUser location: {lat:.4f}, {lng:.4f}"
-        except Exception as e:
-            print(f"Services fetch error: {e}")
+            from app.services.geocoder import reverse_geocode
+            geo = await reverse_geocode(lat, lng)
+            area = geo.get("area") or geo.get("suburb") or ""
+            city = geo.get("city") or geo.get("state") or ""
+            country = geo.get("country") or ""
+            # Build the most specific location text: "Jagamara, Bhubaneswar, India"
+            parts = [p for p in [area, city, country] if p]
+            location_text = ", ".join(parts) if parts else "your area"
+            context_msg = f"\n\nUser's location: {location_text} (GPS available, do NOT ask for location)"
+        except Exception:
+            context_msg = f"\n\nUser's GPS: {lat:.4f}, {lng:.4f} (location IS available, do NOT ask for it)"
+
+    # For emergency intent, get nearby services
+    if intent == "emergency" and lat and lng:
+        # If no cached services, try fetching fresh data
+        if not services:
+            try:
+                import asyncio
+                services = await asyncio.wait_for(fetch_nearby_services(lat, lng, radius=5000), timeout=8.0)
+            except Exception as e:
+                print(f"Services fetch error in chatbot: {e}")
+                services = None
+
+        if services:
+            # Filter to only hospitals for "nearest hospital" type queries
+            if any(kw in message.lower() for kw in ["hospital", "clinic", "doctor"]):
+                hospital_services = [s for s in services if s.type == "hospital"]
+                top = hospital_services[:5] if hospital_services else services[:5]
+            else:
+                top = services[:5]
+            
+            services_text = "\n".join([
+                f"- {s.name} ({s.type}): {s.distance_km}km away"
+                + (f", Phone: {s.phone}" if s.phone else "")
+                for s in top
+            ])
+            context_msg += f"\n\nNEARBY SERVICES (REAL-TIME DATA — ONLY mention these names):\n{services_text}"
+        else:
+            context_msg += "\n\nNo real-time service data available. Tell the user to check the Emergency tab in the app or call 112. DO NOT guess or make up any hospital/service names."
 
     # Build message history for LangChain
     lang_hint = f"\nUser's preferred language: {language}. Respond in this language." if language else ""
@@ -139,3 +169,4 @@ async def get_chatbot_response(
     except Exception as e:
         print(f"LLM error: {e}")
         return f"I'm having trouble connecting right now. For immediate help, call 112 (India) or your local emergency number.", None
+
