@@ -5,8 +5,8 @@ from app.models.schemas import EmergencyService
 
 # Primary and fallback Overpass API servers
 OVERPASS_SERVERS = [
-    "https://overpass-api.de/api/interpreter",
     "https://overpass.kumi.systems/api/interpreter",
+    "https://overpass-api.de/api/interpreter",
     "https://overpass.nchc.org.tw/api/interpreter"
 ]
 
@@ -55,7 +55,11 @@ _client = None
 def get_client():
     global _client
     if _client is None:
-        headers = {"User-Agent": "RoadSoS-SafetyCompanion/1.0 (contact: road-sos@example.com)"}
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            "Accept": "*/*",
+            "Accept-Language": "en-US,en;q=0.9",
+        }
         _client = httpx.AsyncClient(timeout=30, headers=headers)
     return _client
 
